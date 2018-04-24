@@ -3,7 +3,7 @@ import time as tim
 import bs4 as bs
 import django,os 
 from treciproj import settings
-import os
+import os,ast
 import datetime 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "treciproj.settings")
 django.setup()
@@ -477,7 +477,7 @@ while(1):
     obj  = Country.objects.get(id=4)
     dat = obj.date
     datke = (datetime.date.today())
-
+    dat = ast.literal_eval(dat)
     datke = datke.strftime('%Y%m%d')
     #print(type(datke))
     print(datke)

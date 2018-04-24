@@ -107,242 +107,116 @@ def get_horses(racelist):
                 horsename = tds[2].text.strip(' \t\n\r').strip()[:-4].replace(" ", "%20")
                 #print(horsename)
                 print("itsthis")
-                horseurl = 'http://www.equineline.com/Free5XPedigreeSearchResults.cfm?horse_name=' + horsename + '&page_state=LIST_HITS&foaling_year=&dam_name=&include_sire_line=Y'
-                print(horseurl)
-                print('kauboj')
+                horseurl = 'http://www.equineline.com/Free5XPedigreeSearchResults.cfm?horse_name=' + horsename + '&page_state=LIST_HITS&foaling_year=&dam_name=&include_sire_line=Y'             
+                #soup = bs.BeautifulSoup(horsereq.text, 'lxml')
+                #h4 = soup.find('h4')
+                #import requests 
+
+                headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)', 
+                                'x-requested-with': 'XMLHttpRequest','Accept-Encoding' : 'gzip, deflate', 
+                                'Cache-Control': 'max-age=0', 'Connection' : 'keep-alive', 'Cookie' : 'CFID=42760483; CFTOKEN=bdd03ad8b9d75f10%2D2152DD43%2D5056%2DBE2F%2D78E5D1FFBA809844; TIMEVISITED=%7Bts%20%272018%2D04%2D21%2015%3A43%3A55%27%7D; __unam=10bb875-162e9bbc10f-42955c48-10',
+                                'Host' : 'www.equineline.com','Referer' : "equineline.com",
+                                'Upgrade-Insecure-Requests' : '1' }
+                                #http://www.equineline.com/Free5XPedigreeSearchResults.cfm?horse_name=' + horsename + '&page_state=LIST_HITS&foaling_year=&dam_name=&include_sire_line=Y'
+                                #http://www.equineline.com/Free-5X-Pedigree.cfm/=Winner%20(JPN)?page_state=DISPLAY_REPORT&reference_number=9851563&registry=T&horse_name==Winner%20(JPN)&dam_name==Winner%20Balance%20(JPN)&foaling_year=2013&include_sire_line=Y
+                #horsename = "Jack(AUS)"
                 while(1):
+                    horsereq = requests.get("http://www.equineline.com/Free5XPedigreeSearchResults.cfm?horse_name=" + horsename + "&page_state=LIST_HITS&foaling_year=&dam_name=&include_sire_line=Y",headers=headers,proxies=proxies)
                     try:
-                        ###proxies = get_proxy()
-                        horsereq = requests.get(horseurl,headers=headers,timeout=9,proxies=proxies)
-                    except:
-                        print('error')
-                        time.sleep(12)
-                        horsereq = requests.get(horseurl,headers=headers,timeout=9,proxies=proxies)
-                        continue
-                    else:
-                        print("mek")
-                        break              
-                soup = bs.BeautifulSoup(horsereq.text, 'lxml')
-                h4 = soup.find('h4')
-                print(h4)
-                if(str(h4)=='<h4><strong>No Matches Found</strong></h4>'):
-                    print("Horse doesn't exist in DB")
-                    inftab = 'n/a'
-                    inftab = [
-                            {
-                                "sire": "",
-                                "name": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            },
-                            {
-                                "sire": "",
-                                "name": "",
-                                "mares": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            },
-                            {
-                                "sire": "",
-                                "mares": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            }
-                        ]
-                else:
-                #print(soup)
-                    try:
+                        soup = bs.BeautifulSoup(horsereq.text, 'lxml')
+                        print(horsereq.text)
                         horsrl = soup.find('a').get('href')
-                    except:
-                        print("Captcha error")
+                    except: 
                         try:
                             ime = horsereq.headers['x-cache-proxyname']
                         except:
-                            print("ime error")
-                            time.sleep(3)
-                        else:
-                            payld = {
-                            'name' : ime,
-                            }
-                            print(ime)
-                            headers={'Authorization' : 'Zm9ybXVsYTE='}
-                            ipic = proxies.get('http')
-                            ipic = ipic[0:-1] + '9'
-                            print(ipic)
-                            stop = requests.post(ipic + '/api/instances/stop', json=payld,headers=headers)
-                            print("success")
-                        
-                        ###proxies = get_proxy()
-                        #time.sleep(6)
-                        while(1):
-                            try:
-                                ##proxies = get_proxy()
-                                horsereq = requests.get(horseurl,headers=headers,timeout=9,proxies=proxies)
-                                soup = bs.BeautifulSoup(horsereq.text, 'lxml')
-                                horsrl = soup.find('a').get('href')
-                            except:
-                                print("Error at 195 line.")
-                                try:
-                                    ime = horsereq.headers['x-cache-proxyname']
-                                    
-                                except:
-                                    print(horsereq.headers)
-                                    time.sleep(3)
-                                else:
-                                    payld = {
-                                    'name' : ime,
-                                    }
-                                    print(ime)
-                                    headers={'Authorization' : 'Zm9ybXVsYTE='}
-                                    ipic = proxies.get('http')
-                                    ipic = ipic[0:-1] + '9'
-                                    print(ipic)
-                                    stop = requests.post(ipic + '/api/instances/stop', json=payld,headers=headers)
-                                    #continue
-                            else:
-                                break
-                        #soup = bs.BeautifulSoup(horsereq.text, 'lxml') 
-                    #h#orsrl = soup.find('a').get('href')
-                    url = 'http://www.equineline.com/' + horsrl
-                    start = url.find('reference_number=')
-                    end = url.find('&registry')
-                    refnum = url[start+17:end]
-                    print(refnum)
-                    link = 'http://www.equineline.com/Free5XPedigreeNickingDisplay.cfm?page_state=DISPLAY_REPORT&reference_number=' + refnum
-                    #print(url)
-                    #print(link)
-                    while(1):
-                        try:
-                            ##proxies = get_proxy()
-                            maker = requests.get(link,headers=headers,timeout=9,proxies=proxies)
-                            supica = bs.BeautifulSoup(maker.text,'lxml')
-                            table = supica.find('table')
-                            if(table is None):
-                                ##proxies = get_proxy()
-                                #soup = bs.BeautifulSoup(r.text,'lxml')
-                                try:
-                                    a = supica.find('a').get('href')
-                                except:
-                                    a=''
-                                if(a=='mailto:help@equineline.com'):
-                                    print("NO horse")
-                                    table='Notable'
-                                else:
-                                    print("stvorena")
-                                    maker = requests.get(link,headers=headers,timeout=9,proxies=proxies)
-                                    supica = bs.BeautifulSoup(maker.text,'lxml')
-                                    table = supica.find('table')
-                        except:
-                            continue
-                        else:
-                            break
-                    #print(supica)
-                   # table = supica.find('table')
-                    #print(table)
-                    #print(type(table))
-                    while(1):
-                        try:
-                            if(table is None):
-                                time.sleep(3)
-                                ##proxies = get_proxy()
-                                raise EnvironmentError
-                            else:
-                                break
-                        except:
-                            while(1):
-                                try:
-                                    maker = requests.get(link,headers=headers,timeout=9,proxies=proxies)
-                                    supica = bs.BeautifulSoup(maker.text,'lxml')
-                                    table = supica.find('table')
-                                    if(table is None):
-                                        time.sleep(3)
-                                        ##proxies = get_proxy()
-                                        raise EnvironmentError
-                                except:
-                                    continue
-                                else:
-                                    break
-                            break
-
-                            supica = bs.BeautifulSoup(maker.text,'lxml')
-                            table = supica.find('table')
-                        
-                    if(table=='Notable'):
-                        inftab = [
-                            {
-                                "sire": "",
-                                "name": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            },
-                            {
-                                "sire": "",
-                                "name": "",
-                                "mares": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            },
-                            {
-                                "sire": "",
-                                "mares": "",
-                                "foals": "",
-                                "starters": "",
-                                "winners": "",
-                                "BW (%)": "",
-                                "earnings": "",
-                                "ael": ""
-                            }
-                        ]
+                            ime= horsereq.history[0].headers['x-cache-proxyname']
+                        payld = {
+                        'name' : ime,
+                        }
+                        print(ime)
+                        headers={'Authorization' : 'Zm9ybXVsYTE='}
+                        ipic = proxies.get('http')
+                        ipic = ipic[0:-1] + '9'
+                        print(ipic)
+                        stop = requests.post(ipic + '/api/instances/stop', json=payld,headers=headers)
                     else:
-                        inftab = get_table(table)
-                ud = str(uuid.uuid4())
-                if(len(tds)==12): 
-                    horsedict = {
-                        'P#' : tds[0].text.strip(' \t\n\r').replace(" ", ""),
-                        'PP' : tds[1].text,
-                        'Name' : tds[2].text.strip(' \t\n\r').strip()[:-5],
-                        'Claim' : tds[6].text,
-                        'Jockey': tds[7].text,
-                        'Wgt' : tds[8].text,
-                        'Trainer' : tds[9].text,
-                        'M/L' : tds[10].text,
-                        'Info' : inftab,
-                        'uuid' : ud,
-                    }
-                else:
-                    horsedict = {
-                        'P#' : tds[0].text.strip(' \t\n\r').replace(" ", ""),
-                        'PP' : tds[1].text,
-                        'Name' : tds[2].text.strip(' \t\n\r').strip()[:-5],
-                        'Claim' : 'No claim',
-                        'Jockey': tds[6].text,
-                        'Wgt' : tds[7].text,
-                        'Trainer' : tds[8].text,
-                        'M/L' : tds[9].text,
-                        'Info' : inftab,
-                        'uuid' : ud,
-                    }
-                horselist.append(horsedict)
+                        
+                        url = 'http://www.equineline.com/' + horsrl
+                        print(url)
+                        start = url.find('reference_number=')
+                        end = url.find('&registry')
+                        refnum = url[start+17:end]
+                        print(refnum)
+                        break
+
+                referer = "http://www.equineline.com/Free-5X-Pedigree.cfm?page_state=PROCESS_SUBMIT&horse_name=" + horsename.replace(" ", "%20")
+                headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)', 
+                                'x-requested-with': 'XMLHttpRequest','Accept-Encoding' : 'gzip, deflate', 
+                                'Cache-Control': 'max-age=0', 'Connection' : 'keep-alive', 'Cookie' : "CFID=42760483; CFTOKEN=bdd03ad8b9d75f10%2D2152DD43%2D5056%2DBE2F%2D78E5D1FFBA809844; TIMEVISITED=%7Bts%20%272018%2D04%2D21%2015%3A43%3A55%27%7D; __unam=10bb875-162e9bbc10f-42955c48-14",
+                                'Host' : 'www.equineline.com','Referer' : referer,
+                                'Upgrade-Insecure-Requests' : '1' }
+                link = url
+                while(1):
+                        
+                    maker = requests.get(link,headers=headers,timeout=9,proxies=proxies)
+                    supica = bs.BeautifulSoup(maker.text,'lxml')
+                    table = supica.find_all('div',class_='col-xs-2 col2-pedigree')
+                    #print(maker.text)
+                
+                    #print("\n\nKEK\n\n")
+                    #print(table[0])
+                    try:
+                        horsebride = table[0].find_all('div')[1].text #prvi zavrsen
+                    except: 
+                        ime = maker.headers['x-cache-proxyname']
+                        payld = {
+                        'name' : ime,
+                        }
+                        print(ime)
+                        headers={'Authorization' : 'Zm9ybXVsYTE='}
+                        ipic = proxies.get('http')
+                        ipic = ipic[0:-1] + '9'
+                        print(ipic)
+                        stop = requests.post(ipic + '/api/instances/stop', json=payld,headers=headers)
+                    else:
+                        break
+
+                #print(horsebride)
+                def name_fix(horse_html):
+                    horsebride = horse_html
+                    if(horsebride[0]==" "):
+                        horsebride = horsebride[1:]
+                    sechorseb = horsebride[1:]
+                    zarezj = sechorseb.find(",")
+
+                    sechorseb = sechorseb[zarezj+2:].replace("  ", "")
+
+
+                    #dudu = sechorseb.find_all(" ")
+                    #print(sechosreb[dudu:])
+                    sechorseb = sechorseb.replace(" ", ",")
+                    print(sechorseb[-1])
+                    sechorseb = sechorseb[:-1]
+                    if(sechorseb[-1]==","):
+                        sechorseb = sechorseb[:-1]
+                    #print(listic)
+                    lenic = len(sechorseb)
+                    firsthorse = horsebride[1:zarezj-1] + (sechorseb[0:lenic-2])
+                    return firsthorse
+
+
+
+                tabletwo = supica.find_all('div',class_='col-xs-2 col3-pedigree')
+                horsehuss = tabletwo[0].find_all('div')[1].text
+
+                final_string = (name_fix(horsebride)) + "," + (name_fix(horsehuss)) + "\n"
+
+#print(r.headers)
+
+
+                    
+                horselist.append(final_string)
         race['Horses'] = horselist
         print("list: ", horselist)
     return racelist
@@ -519,7 +393,7 @@ while(1):
                 #Zm9ybXVsYTE=
                 rer = requests.patch('http://159.65.107.239:8889/api/scaling',json=scaling_payload, headers=headers)
                 print(rer)
-                time.sleep(60)
+                #time.sleep(60)
                 p.is_scraping = 1
                 p.save()
                 print("Saving P")
