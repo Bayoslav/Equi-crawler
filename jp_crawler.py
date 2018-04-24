@@ -148,6 +148,7 @@ def get_races(events):
                 word = word.strip(" \t\n\r ' ")
                 #print(word)
                 nl.append(word)
+            print(nl)
             res = {
                 'command':'dispDenmaList',
                 'raceY':nl[0],
@@ -441,13 +442,16 @@ def get_races(events):
     print(events)
     #print(formData)
     #print(formData.get('raceYmd'))
-    date =  (formData.get('raceYmd'))
-    o = Country('4','Japan',events,fontic)
-    o.save()
+    obj = Country.objects.get(id=4)
+    realdate = ast.literal_eval(obj.date)
+    realdate.add(fontic)
+    obj.date = realdate
+    obj.dicts = events 
+    obj.save()
     
     
-    datic = datetime.date.today()
-    d = str(datic)
+    #datic = datetime.date.today()
+    d = str(fontic)
     filename = 'JP' + d + '.json'
     path = "JPFiles"
     fullpath = os.path.join(path, filename)
@@ -476,11 +480,11 @@ def get_races(events):
 while(1):
     obj  = Country.objects.get(id=4)
     dat = obj.date
-    datke = (datetime.date.today())
+    curr_date = (datetime.date.today())
     dat = ast.literal_eval(dat)
-    datke = datke.strftime('%Y%m%d')
+    curr_date = curr_date.strftime('%Y%m%d')
     #print(type(datke))
-    print(datke)
+    #print(datke)
     while(1):
         try:
             r = requests.get('http://210.145.16.108/jair/SelectRaceYear.do?command=GO')
@@ -494,25 +498,41 @@ while(1):
     #print(tdis)
     #print(fontic)
     #datic = (fontic[2].text).replace('/', '') #after 2 increment +67
-    datelist = []
+    datelist = set()
     #print(fontic[4].text).replace('/', '')
     for i in range(2,16,2):
         datic = (tdis[i].text).replace('/', '')
-        datelist.append(datic)
+        print(datic)
+        if(datic==''):
+            pass
+        else:
+
+            datelist.add(datic)
     
+
     print("d")
     #print
     print(datelist)
+    dates_list = datelist - dat
+    print(dates_list)
+    print(dat)
     #print(fontic[14])
     #print(datic)
-    if(datke in datelist and dat!=datke):
-        print("New race! Scraping")
-        p = Podesavanja.objects.get(id=1)
-        while(1):
-            if (p.is_scraping):
-                print("Waiting for other crawlers to finish scraping")
-                tim.sleep(300)
-            else:
+    print(len(dates_list))
+    if(len(dates_list)==0):
+        print("No new races for today - ", curr_date)
+        time.sleep(1200)
+    else:
+        #dates_list = list(dates_list)
+        for datke in dates_list:
+            print(datke)
+            print("New race! Scraping")
+            p = Podesavanja.objects.get(id=1)
+            while(1):
+                if (p.is_scraping):
+                    print("Waiting for other crawlers to finish scraping")
+                    tim.sleep(1200)
+              
                 scaling_payload = {
                     "min": "1",
                     "required": "7",
@@ -524,14 +544,12 @@ while(1):
                 #tim.sleep(60)
                 #p.is_scraping = 1
                 #p.save()
+                print(datke)
                 print("Saving P")
                 get_events(datke)
                 break
         #get_events(datke)
-    else: 
-        print("No new events for todays date found, sleeping for 20 minutes")
-        #get_events(20180304)
-        tim.sleep(1200)
+  
     #get_events("20180304")
     #get_events(datic)   
 #get_life()
