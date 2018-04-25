@@ -555,7 +555,7 @@ while(1):
                 headers={'Authorization' : 'Zm9ybXVsYTE='}
                 rer = requests.patch('http://159.65.107.239:8889/api/scaling',json=scaling_payload, headers=headers)
                 print(rer)
-                #tim.sleep(60)
+                tim.sleep(60)
                 #p.is_scraping = 1
                 #p.save()
                 print(datke)
