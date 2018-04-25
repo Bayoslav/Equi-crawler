@@ -216,12 +216,26 @@ def get_races(events):
                 #newtr = tablic[1].find_all('tr')
                 length = len(tr)
                 eventlist = []
+
                 #print("kek", length)
                 horselist = []
                 for i in range(4,length,1):
-                    #print(i)
+                    print(tds)
+                    if(i==4):
+                        f = open("loggin_2.txt",'w')
+                        f.write(str(tds))
+                        f.close()
                     tds = tr[i].find_all('td')
-                    #print(tds[5])
+                    try:
+                        print(tds[5])
+                    except:
+                        print(len(tds))
+                        f = open("logging.txt",'w')
+                        f.write(str(tds) + str(type(tds)))
+                        f.close()
+                        print(tds)
+                        print("\n")
+                        print(tds[0])
                     fontsss = tds[5].find_all('font')
                     Sire = (fontsss[0].text)
                     Dam = fontsss[1].text
