@@ -71,6 +71,6 @@ tabletwo = supica.find_all('div',class_='col-xs-2 col3-pedigree')
 horsehuss = tabletwo[0].find_all('div')[1].text
 
 final_string = (name_fix(horsebride)) + "," + (name_fix(horsehuss))
-
+print(final_string)
 #print(r.headers)
 

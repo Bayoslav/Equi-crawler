@@ -504,8 +504,9 @@ while(1):
         continue 
     else:
         print("New race! Scraping.")
-        p = Podesavanja.objects.get(id=1)
+        
         while(1):
+            p = Podesavanja.objects.get(id=1)
             if (p.is_scraping):
                 print("Waiting for other crawlers to finish scraping")
                 time.sleep(300)

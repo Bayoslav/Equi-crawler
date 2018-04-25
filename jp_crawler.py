@@ -521,28 +521,30 @@ while(1):
             pass
         else:
 
-            datelist.add(datic)
+            datelist.add(int(datic))
     
 
     print("d")
     #print
-    print(datelist)
+    print("datelist: ", datelist)
     dates_list = datelist - dat
-    print(dates_list)
-    print(dat)
+    print("dat: ",dat)
+    print("\ndates_list: ", dates_list)
+    
     #print(fontic[14])
     #print(datic)
     print(len(dates_list))
     if(len(dates_list)==0):
         print("No new races for today - ", curr_date)
-        time.sleep(1200)
+        tim.sleep(1200)
     else:
         #dates_list = list(dates_list)
         for datke in dates_list:
             print(datke)
             print("New race! Scraping")
-            p = Podesavanja.objects.get(id=1)
+            #p = Podesavanja.objects.get(id=1)
             while(1):
+                p = Podesavanja.objects.get(id=1)
                 if (p.is_scraping):
                     print("Waiting for other crawlers to finish scraping")
                     tim.sleep(1200)
