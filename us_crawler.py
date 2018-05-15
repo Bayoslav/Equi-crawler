@@ -180,7 +180,7 @@ def get_horses(racelist):
                             headers={'Authorization' : 'Zm9ybXVsYTE='}
                             ipic = proxies.get('http')
                             ipic = ipic[0:-1] + '9'
-                            print(ipic)
+                            print(ipic)                
                             stop = requests.post(ipic + '/api/instances/stop', json=payld,headers=headers)
                             print("success")
                         
